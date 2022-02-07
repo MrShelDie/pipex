@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:04:34 by nick              #+#    #+#             */
-/*   Updated: 2022/02/07 03:30:51 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/07 12:11:07 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,9 @@ static void	fill_prime(int argc, char **argv, char **envp, t_prime *prime)
 	}
 }
 
-void	pipex(t_prime *prime)
+static void	first_child(int pipefd[2], t_prime *prime)
 {
 	pid_t	pid;
-	int		pipefd[2];
-	int		tempfd;
-	int		i;
 
 	if (pipe(pipefd) == -1)
 		pipex_exit(prime, PIPE, prime->argv[0], NULL);
@@ -71,30 +68,71 @@ void	pipex(t_prime *prime)
 		pipex_exit(prime, FORK, prime->argv[0], NULL);
 	}
 	if (pid == 0)
-		first_child(prime, pipefd[WRITE_END]);
+		first_child_exec(prime, pipefd[WRITE_END]);
 	close(pipefd[WRITE_END]);
+}
+
+static void	middle_child(
+	int cmd_nb, int pipefd[2], int readfd, t_prime *prime)
+{
+	pid_t	pid;
+
+	if (pipe(pipefd) == -1)
+	{
+		close(readfd);
+		pipex_exit(prime, PIPE, prime->argv[0], NULL);
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		close(readfd);
+		close(pipefd[READ_END]);
+		close(pipefd[WRITE_END]);
+		pipex_exit(prime, FORK, prime->argv[0], NULL);
+	}
+	if (pid == 0)
+		middle_child_exec(prime, cmd_nb, readfd, pipefd[WRITE_END]);
+	close(readfd);
+	close(pipefd[WRITE_END]);
+}
+
+static pid_t	last_child(int readfd, t_prime *prime)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		close(readfd);
+		pipex_exit(prime, FORK, prime->argv[0], NULL);
+	}
+	if (pid == 0)
+		last_child_exec(prime, readfd);
+	close(readfd);
+	return (pid);
+}
+
+static int	pipex(t_prime *prime)
+{
+	int		last_proc_status;
+	int		status;
+	int		pipefd[2];
+	int		readfd;
+	int		i;
+
+	first_child(pipefd, prime);
 	i = 0;
 	while (++i < prime->cmds_size - 1)
 	{
-		tempfd = pipefd[READ_END];
-		if (pipe(pipefd) == -1)
-		{
-			close(tempfd);
-			pipex_exit(prime, PIPE, prime->argv[0], NULL);
-		}
-		pid = fork();
-		if (pid == -1)
-		{
-			close(tempfd);
-			close(pipefd[READ_END]);
-			close(pipefd[WRITE_END]);
-			pipex_exit(prime, FORK, prime->argv[0], NULL);
-		}
-		if (pid == 0)
-			child(prime, i, tempfd, pipefd[WRITE_END]);
-		close(tempfd);
-		close(pipefd[WRITE_END]);
+		readfd = pipefd[READ_END];
+		middle_child(i, pipefd, readfd, prime);
 	}
+	readfd = pipefd[READ_END];
+	waitpid(last_child(readfd, prime), &last_proc_status, 0);
+	i = 0;
+	while (++i < prime->cmds_size)
+		wait(&status);
+	return (last_proc_status);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -104,4 +142,5 @@ int	main(int argc, char **argv, char **envp)
 	if (argc < 5)
 		pipex_exit(NULL, FEW_ARGS, argv[0], NULL);
 	fill_prime(argc, argv, envp, &prime);
+	// exit with status of last proc
 }

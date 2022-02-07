@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 16:42:22 by nick              #+#    #+#             */
-/*   Updated: 2022/02/07 03:11:41 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/07 11:52:53 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PIPEX_BONUS_H
 
 # include <fcntl.h>
+# include <sys/wait.h>
 
 # include "libft_tools.h"
 
