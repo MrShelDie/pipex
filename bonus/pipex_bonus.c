@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:04:34 by nick              #+#    #+#             */
-/*   Updated: 2022/02/07 00:35:02 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/07 03:30:51 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static void	fill_prime(int argc, char **argv, char **envp, t_prime *prime)
 	int		i;
 
 	first_cmd_idx = 2;
+	prime->argc = argc;
 	prime->argv = argv;
 	prime->envp_paths = get_paths(envp);
 	prime->cmds_size = argc - 3;
@@ -43,13 +44,56 @@ static void	fill_prime(int argc, char **argv, char **envp, t_prime *prime)
 	}
 	prime->cmds = (char ***)malloc(sizeof(char **) * (prime->cmds_size));
 	if (!prime->cmds)
-		pipex_exit(prime, MALLOC, prime->program, NULL);
+		pipex_exit(prime, MALLOC, prime->argv[0], NULL);
 	i = -1;
 	while (++i + first_cmd_idx < argc - 1)
 	{
 		prime->cmds[i] = ft_split(argv[i + first_cmd_idx], ' ');
 		if (!prime->cmds[i])
-			pipex_exit(prime, MALLOC, prime->program, NULL);
+			pipex_exit(prime, MALLOC, prime->argv[0], NULL);
+	}
+}
+
+void	pipex(t_prime *prime)
+{
+	pid_t	pid;
+	int		pipefd[2];
+	int		tempfd;
+	int		i;
+
+	if (pipe(pipefd) == -1)
+		pipex_exit(prime, PIPE, prime->argv[0], NULL);
+	pid = fork();
+	if (pid == -1)
+	{
+		close(pipefd[READ_END]);
+		close(pipefd[WRITE_END]);
+		pipex_exit(prime, FORK, prime->argv[0], NULL);
+	}
+	if (pid == 0)
+		first_child(prime, pipefd[WRITE_END]);
+	close(pipefd[WRITE_END]);
+	i = 0;
+	while (++i < prime->cmds_size - 1)
+	{
+		tempfd = pipefd[READ_END];
+		if (pipe(pipefd) == -1)
+		{
+			close(tempfd);
+			pipex_exit(prime, PIPE, prime->argv[0], NULL);
+		}
+		pid = fork();
+		if (pid == -1)
+		{
+			close(tempfd);
+			close(pipefd[READ_END]);
+			close(pipefd[WRITE_END]);
+			pipex_exit(prime, FORK, prime->argv[0], NULL);
+		}
+		if (pid == 0)
+			child(prime, i, tempfd, pipefd[WRITE_END]);
+		close(tempfd);
+		close(pipefd[WRITE_END]);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:08:44 by nick              #+#    #+#             */
-/*   Updated: 2022/02/06 21:37:23 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/07 02:33:14 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,13 @@ void	pipex_exit(t_prime *prime, t_error error, char *program, char *file)
 		pipex_perror(error, program, file);
 	if (prime)
 	{
-		// Free data
+		if (prime->envp_paths)
+			ft_free_split(prime->envp_paths);
+		if (prime->cmds)
+		{
+			while (--prime->cmds_size >= 0)
+				ft_free_split(prime->cmds[prime->cmds_size]);
+		}
 	}
 	exit(EXIT_SUCCESS);
 }
