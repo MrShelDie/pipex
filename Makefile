@@ -14,7 +14,7 @@ _LIBFT_TOOLS_ =				\
 	ft_strncmp.c
 
 SRC_BONUS 	= $(addprefix bonus/, $(_SRC_BONUS_))
-LIBFT_TOOLS		= $(addprefix libft_tools/, $(_LIBFT_TOOLS_))
+LIBFT_TOOLS		= $(addprefix ft_tools/, $(_LIBFT_TOOLS_))
 
 SRC_BONUS		+= $(LIBFT_TOOLS)
 OBJ_BONUS		= $(SRC_BONUS:.c=.o)

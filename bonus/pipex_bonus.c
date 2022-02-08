@@ -6,11 +6,12 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:04:34 by nick              #+#    #+#             */
-/*   Updated: 2022/02/08 00:48:15 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/09 00:01:42 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
+#include "libft_tools.h"
 
 static char	**get_paths(char **envp)
 {
@@ -25,17 +26,22 @@ static char	**get_paths(char **envp)
 	return (NULL);
 }
 
+static void	init_prime(int argc, char **argv, char **envp, t_prime *prime)
+{
+	prime->argc = argc;
+	prime->argv = argv;
+	prime->envp = envp;
+	prime->envp_paths = get_paths(envp);
+	prime->cmds_size = argc - 3;
+	prime->here_doc = FALSE;
+}
+
 static void	fill_prime(int argc, char **argv, char **envp, t_prime *prime)
 {
 	int		first_cmd_idx;
 	int		i;
 
 	first_cmd_idx = 2;
-	prime->argc = argc;
-	prime->argv = argv;
-	prime->envp_paths = get_paths(envp);
-	prime->cmds_size = argc - 3;
-	prime->here_doc = FALSE;
 	if (!ft_strncmp(argv[1], "here_doc", 9))
 	{
 		first_cmd_idx = 3;
@@ -85,6 +91,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc < 5)
 		pipex_exit(NULL, FEW_ARGS, argv[0], NULL);
+	init_prime(argc, argv, envp, &prime);
 	fill_prime(argc, argv, envp, &prime);
 	// exit with status of last proc
 }

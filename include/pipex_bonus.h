@@ -6,17 +6,17 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 16:42:22 by nick              #+#    #+#             */
-/*   Updated: 2022/02/08 00:56:38 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/09 01:41:15 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_BONUS_H
 # define PIPEX_BONUS_H
 
+# include <unistd.h>
+# include <stdlib.h>
 # include <fcntl.h>
 # include <sys/wait.h>
-
-# include "libft_tools.h"
 
 # define FALSE 0
 # define TRUE 1
@@ -28,6 +28,7 @@
 typedef struct s_prime
 {
 	char	**argv;
+	char	**envp;
 	char	**envp_paths;
 	char	***cmds;
 	int		cmds_size;
@@ -72,5 +73,8 @@ void	middle_child_exec(t_prime *prime, char **cmd, int readfd, int writefd);
 /* The last process connects using pipe
 *  to the previous one and opens the file for writing */
 void	last_child_exec(t_prime *prime, int readfd);
+
+/* Prints the environment variable */
+void	write_here_doc_line(const char *line, char **envp, int writefd);
 
 #endif
