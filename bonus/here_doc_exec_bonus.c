@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 09:49:35 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 12:54:08 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 14:53:24 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ static void	write_here_doc_line(
 		while (line[i] && (line[i] != '$' || line[i - 1] == '\\'))
 			i++;
 		write(writefd, line + start, i);
-		write_var(line, envp, writefd, &i);
+		if (line[i])
+			write_var(line, envp, writefd, &i);
 		start = i;
 	}
 }
@@ -65,13 +66,17 @@ static void	write_here_doc_line(
 void	here_doc_exec(t_prime *prime, int writefd)
 {
 	char	*line;
+	char	*limiter;
 
+	limiter = ft_strjoin(prime->argv[2], "\n");
+	ft_putstr_fd("> ", 1);
 	line = get_next_line(0);
 	while (line
-		&& ft_strncmp(line, prime->argv[2], ft_strlen(prime->argv[2]) + 1))
+		&& ft_strncmp(line, limiter, ft_strlen(prime->argv[2]) + 1))
 	{
 		write_here_doc_line(line, prime->envp, writefd);
 		free(line);
+		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 	}
 	if (line)

@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 09:44:52 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 13:14:22 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 14:24:43 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	check_cmd(char *cmd_full_path, const char *cmd, t_prime *prime)
 {
 	if (!cmd_full_path)
 		pipex_exit(prime, CMD_NOT_FOUND, prime->argv[0], cmd);
-	if (access(prime->argv[1], R_OK) == -1)
+	if (access(cmd_full_path, X_OK) == -1)
 	{
 		free(cmd_full_path);
 		pipex_exit(prime, FILE_PERM, prime->argv[0], cmd);
@@ -63,7 +63,7 @@ char	*find_cmd_full_path(const char *cmd, char *const *envp_paths)
 	char	*cmd_full_path;
 	char	*slash_cmd;
 
-	if (cmd[0] != '/' && cmd[0] != '.')
+	if (cmd[0] == '/' || cmd[0] == '.')
 		return (ft_strdup(cmd));
 	slash_cmd = ft_strjoin("/", cmd);
 	if (!slash_cmd)
