@@ -1,5 +1,5 @@
 _SRC_BONUS_ =				\
-	pipex_bonus_utils.c		\
+	pipex_error_bonus.c		\
 	pipex_bonus.c
 
 _LIBFT_TOOLS_ =				\

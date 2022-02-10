@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:04:34 by nick              #+#    #+#             */
-/*   Updated: 2022/02/09 00:01:42 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 09:43:41 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	fill_prime(int argc, char **argv, char **envp, t_prime *prime)
 	}
 }
 
-static int	pipex(t_prime *prime)
+static int	pipex(const t_prime *prime)
 {
 	int		last_proc_status;
 	int		status;
@@ -90,7 +90,7 @@ int	main(int argc, char **argv, char **envp)
 	t_prime	prime;
 
 	if (argc < 5)
-		pipex_exit(NULL, FEW_ARGS, argv[0], NULL);
+		pipex_exit(NULL, ARGS, argv[0], NULL);
 	init_prime(argc, argv, envp, &prime);
 	fill_prime(argc, argv, envp, &prime);
 	// exit with status of last proc

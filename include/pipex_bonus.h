@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 16:42:22 by nick              #+#    #+#             */
-/*   Updated: 2022/02/09 01:41:15 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 08:39:27 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,15 @@ typedef struct s_prime
 /* Error handling codes */
 typedef enum e_error
 {
-	FEW_ARGS,
+	ARGS,
 	MALLOC,
 	PIPE,
 	FORK,
+	FILE_NOT_FOUND,
+	FILE_PERM,
+	FILE_OPEN,
+	DUP,
+	EXECVE,
 	NONE
 }	t_error;
 
@@ -61,20 +66,18 @@ pid_t	last_child(int readfd, t_prime *prime);
 
 /* If there is here_doc, then this process is executed
 *  first, binds stdin to the first command */
-void	here_doc_exec(t_prime *prime, int writefd);
+void	here_doc_exec(const t_prime *prime, int writefd);
 
 /* The first process connects the file for reading, the first
 *  command and the second command. Not executed if there is a here_doc */
-void	first_child_exec(t_prime *prime, int writefd);
+void	first_child_exec(const t_prime *prime, int writefd);
 
 /* The middle child processes are connected to each other using pipe */
-void	middle_child_exec(t_prime *prime, char **cmd, int readfd, int writefd);
+void	middle_child_exec(const t_prime *prime,
+			const char *const *cmd, int readfd, int writefd);
 
 /* The last process connects using pipe
 *  to the previous one and opens the file for writing */
-void	last_child_exec(t_prime *prime, int readfd);
-
-/* Prints the environment variable */
-void	write_here_doc_line(const char *line, char **envp, int writefd);
+void	last_child_exec(const t_prime *prime, int readfd);
 
 #endif

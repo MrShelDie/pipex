@@ -1,56 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus_utils.c                                :+:      :+:    :+:   */
+/*   pipex_error_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:08:44 by nick              #+#    #+#             */
-/*   Updated: 2022/02/09 01:38:37 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 09:45:32 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 #include "libft_tools.h"
-#include "get_next_line.h"
-
-static void	write_var(const char *line, char **envp, int writefd, size_t *i)
-{
-	size_t	var_start;
-	size_t	var_len;
-
-	(*i)++;
-	var_start = *i;
-	while (line[*i] && line[*i] != ' ' && line[*i] != '\t' && line[*i] != '\n'
-		&& line[*i] != '\v' && line[*i] != '\f' && line[*i] != '\r'
-	)
-		(*i)++;
-	var_len = *i - var_start;
-	while (*envp)
-	{
-		if (!ft_strncmp(*envp, line, var_len))
-			break ;
-		envp++;
-	}
-	if (*envp)
-		write(writefd, line + var_start, var_len);
-}
-
-void	write_here_doc_line(const char *line, char **envp, int writefd)
-{
-	size_t	i;
-
-	if (!line[0])
-		return ;
-	i = 1;
-	while (line[i])
-	{
-		while (line[i] != '$' || line[i - 1] == '\\')
-			i++;
-		write(writefd, line, i);
-		write_var(line, envp, writefd, &i);
-	}
-}
 
 static void	pipex_perror(t_error error, char *program, char *file)
 {
@@ -61,7 +22,7 @@ static void	pipex_perror(t_error error, char *program, char *file)
 		ft_putstr_fd(file, 2);
 		ft_putstr_fd(": ", 2);
 	}
-	if (error == FEW_ARGS)
+	if (error == ARGS)
 		ft_putstr_fd("too few argumets\n", 2);
 }
 
