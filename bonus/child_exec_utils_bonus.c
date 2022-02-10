@@ -6,23 +6,17 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 09:44:52 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 09:51:05 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 13:14:22 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 #include "libft_tools.h"
 
-void	check_cmd(
-	const char *cmd_full_path, const char *cmd, const t_prime *prime)
+void	check_cmd(char *cmd_full_path, const char *cmd, t_prime *prime)
 {
 	if (!cmd_full_path)
-		pipex_exit(prime, FILE_NOT_FOUND, prime->argv[0], cmd);
-	if (access(cmd, F_OK) == -1)
-	{
-		free(cmd_full_path);
-		pipex_exit(prime, FILE_NOT_FOUND, prime->argv[0], cmd);
-	}
+		pipex_exit(prime, CMD_NOT_FOUND, prime->argv[0], cmd);
 	if (access(prime->argv[1], R_OK) == -1)
 	{
 		free(cmd_full_path);
@@ -30,7 +24,7 @@ void	check_cmd(
 	}
 }
 
-void	replace_stdio(const t_prime *prime, int readfd, int writefd)
+void	replace_stdio(t_prime *prime, int readfd, int writefd)
 {
 	if (dup2(readfd, STDIN_FILENO) == -1 || dup2(writefd, STDOUT_FILENO) == -1)
 	{
@@ -40,8 +34,7 @@ void	replace_stdio(const t_prime *prime, int readfd, int writefd)
 	}
 }
 
-static char	*get_correct_path(
-	const char *slash_cmd, const char *const *envp_paths)
+static char	*get_correct_path(const char *slash_cmd, char *const *envp_paths)
 {
 	char	*last_correct_path;
 	char	*new_path;
@@ -65,7 +58,7 @@ static char	*get_correct_path(
 	return (last_correct_path);
 }
 
-char	*find_cmd_full_path(const char *cmd, const char *const *envp_paths)
+char	*find_cmd_full_path(const char *cmd, char *const *envp_paths)
 {
 	char	*cmd_full_path;
 	char	*slash_cmd;

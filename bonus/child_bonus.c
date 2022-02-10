@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   child.c                                            :+:      :+:    :+:   */
+/*   child_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 23:30:58 by nick              #+#    #+#             */
-/*   Updated: 2022/02/08 23:50:12 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 12:41:00 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ void	first_child(int pipefd[2], t_prime *prime)
 	close(pipefd[WRITE_END]);
 }
 
-void	middle_child(char **cmd, int pipefd[2], int readfd, t_prime *prime)
+void	middle_child(
+	char *const *cmd, int pipefd[2], int readfd, t_prime *prime)
 {
 	pid_t	pid;
 

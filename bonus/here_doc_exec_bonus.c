@@ -6,19 +6,20 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 09:49:35 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 09:51:55 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 12:54:08 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 #include "libft_tools.h"
+#include "get_next_line.h"
 
 static void	write_var(
-	const char *line, const char *const *envp, int writefd, size_t *i)
+	const char *line, char *const *envp, int writefd, size_t *i)
 {
-	size_t	start;
-	size_t	len;
-	char	*envp_value;
+	size_t		start;
+	size_t		len;
+	const char	*envp_value;
 
 	(*i)++;
 	start = *i;
@@ -42,7 +43,7 @@ static void	write_var(
 }
 
 static void	write_here_doc_line(
-	const char *line, const char *const *envp, int writefd)
+	const char *line, char *const *envp, int writefd)
 {
 	size_t	i;
 	size_t	start;
@@ -61,7 +62,7 @@ static void	write_here_doc_line(
 	}
 }
 
-void	here_doc_exec(const t_prime *prime, int writefd)
+void	here_doc_exec(t_prime *prime, int writefd)
 {
 	char	*line;
 

@@ -6,14 +6,13 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 23:38:41 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 09:49:50 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 13:23:03 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
-#include "libft_tools.h"
 
-static void	check_input_file(const t_prime *prime, int writefd)
+static void	check_input_file(t_prime *prime, int writefd)
 {
 	if (access(prime->argv[1], F_OK) == -1)
 	{
@@ -27,7 +26,7 @@ static void	check_input_file(const t_prime *prime, int writefd)
 	}
 }
 
-void	first_child_exec(const t_prime *prime, int writefd)
+void	first_child_exec(t_prime *prime, int writefd)
 {
 	int		readfd;
 	char	*cmd_full_path;
@@ -50,11 +49,11 @@ void	first_child_exec(const t_prime *prime, int writefd)
 }
 
 void	middle_child_exec(
-	const t_prime *prime, const char *const *cmd, int readfd, int writefd)
+	t_prime *prime, char *const *cmd, int readfd, int writefd)
 {
 	char	*cmd_full_path;
 
-	replace_stdio(prime, readfd, write);
+	replace_stdio(prime, readfd, writefd);
 	close(readfd);
 	close(writefd);
 	cmd_full_path = find_cmd_full_path(cmd[0], prime->envp_paths);
@@ -64,28 +63,11 @@ void	middle_child_exec(
 	pipex_exit(prime, EXECVE, prime->argv[0], cmd[0]);
 }
 
-static void	check_output_file(const t_prime *prime, int readfd)
-{
-	if (access(prime->argv[1], F_OK) == -1)
-	{
-		close(readfd);
-		pipex_exit(prime, FILE_NOT_FOUND,
-			prime->argv[0], prime->argv[prime->argc - 1]);
-	}
-	if (access(prime->argv[1], R_OK) == -1)
-	{
-		close(readfd);
-		pipex_exit(prime, FILE_PERM,
-			prime->argv[0], prime->argv[prime->argc - 1]);
-	}
-}
-
-void	last_child_exec(const t_prime *prime, int readfd)
+void	last_child_exec(t_prime *prime, int readfd)
 {
 	int		writefd;
 	char	*cmd_full_path;
 
-	check_output_file(prime, readfd);
 	if (prime->here_doc)
 		writefd = open(prime->argv[prime->argc - 1],
 				O_WRONLY | O_CREAT | O_APPEND, 0666);

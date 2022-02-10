@@ -6,14 +6,14 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:04:34 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 09:43:41 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/10 13:16:01 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 #include "libft_tools.h"
 
-static char	**get_paths(char **envp)
+static char	**get_paths(char *const *envp)
 {
 	int	i;
 
@@ -26,7 +26,8 @@ static char	**get_paths(char **envp)
 	return (NULL);
 }
 
-static void	init_prime(int argc, char **argv, char **envp, t_prime *prime)
+static void	init_prime(
+	int argc, char *const *argv, char *const *envp, t_prime *prime)
 {
 	prime->argc = argc;
 	prime->argv = argv;
@@ -36,7 +37,7 @@ static void	init_prime(int argc, char **argv, char **envp, t_prime *prime)
 	prime->here_doc = FALSE;
 }
 
-static void	fill_prime(int argc, char **argv, char **envp, t_prime *prime)
+static void	fill_prime(int argc, char *const *argv, t_prime *prime)
 {
 	int		first_cmd_idx;
 	int		i;
@@ -48,7 +49,7 @@ static void	fill_prime(int argc, char **argv, char **envp, t_prime *prime)
 		prime->here_doc = TRUE;
 		prime->cmds_size = argc - 4;
 	}
-	prime->cmds = (char ***)malloc(sizeof(char **) * (prime->cmds_size));
+	prime->cmds = (char *const **)malloc(sizeof(char **) * (prime->cmds_size));
 	if (!prime->cmds)
 		pipex_exit(prime, MALLOC, prime->argv[0], NULL);
 	i = -1;
@@ -60,7 +61,7 @@ static void	fill_prime(int argc, char **argv, char **envp, t_prime *prime)
 	}
 }
 
-static int	pipex(const t_prime *prime)
+static int	pipex(t_prime *prime)
 {
 	int		last_proc_status;
 	int		status;
@@ -88,10 +89,13 @@ static int	pipex(const t_prime *prime)
 int	main(int argc, char **argv, char **envp)
 {
 	t_prime	prime;
+	int		status;
 
 	if (argc < 5)
 		pipex_exit(NULL, ARGS, argv[0], NULL);
 	init_prime(argc, argv, envp, &prime);
-	fill_prime(argc, argv, envp, &prime);
-	// exit with status of last proc
+	fill_prime(argc, argv, &prime);
+	status = pipex(&prime);
+	free_prime(&prime);
+	exit(status);
 }
