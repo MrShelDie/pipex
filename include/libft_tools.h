@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:23:51 by nick              #+#    #+#             */
-/*   Updated: 2022/02/09 01:17:48 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 01:55:13 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void	ft_putstr_fd(const char *s, int fd);
+void	ft_putchar_fd(char c, int fd);
 size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);

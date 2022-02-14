@@ -6,38 +6,14 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:08:44 by nick              #+#    #+#             */
-/*   Updated: 2022/02/14 22:33:24 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 02:55:06 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 #include "libft_tools.h"
 
-static void	print_error_msg(t_error error)
-{
-	if (error == ARGS)
-		ft_putstr_fd("Too few argumets\n", 2);
-	else if (error == MALLOC)
-		ft_putstr_fd("Memory allocation error\n", 2);
-	else if (error == PIPE)
-		ft_putstr_fd("Pipe creation error\n", 2);
-	else if (error == FORK)
-		ft_putstr_fd("Error when creating a new process\n", 2);
-	else if (error == CMD_NOT_FOUND)
-		ft_putstr_fd("command not found\n", 2);
-	else if (error == FILE_NOT_FOUND)
-		ft_putstr_fd("No such file or directory\n", 2);
-	else if (error == FILE_PERM)
-		ft_putstr_fd("Permission denied\n", 2);
-	else if (error == FILE_OPEN)
-		ft_putstr_fd("File opening error\n", 2);
-	else if (error == DUP)
-		ft_putstr_fd("I/O stream redirection error\n", 2);
-	else if (error == EXECVE)
-		ft_putstr_fd("process start execution error\n", 2);
-}
-
-static void	pipex_perror(t_error error, const char *program, const char *file)
+static void	pipex_perror(const char *program, const char *file, char *err_str)
 {
 	ft_putstr_fd(program, 2);
 	ft_putstr_fd(": ", 2);
@@ -46,16 +22,16 @@ static void	pipex_perror(t_error error, const char *program, const char *file)
 		ft_putstr_fd(file, 2);
 		ft_putstr_fd(": ", 2);
 	}
-	if (error != NONE)
-		print_error_msg(error);
+	ft_putstr_fd(err_str, 2);
+	ft_putchar_fd('\n', 2);
 }
 
 void	free_prime(t_prime *prime)
 {
 	if (prime)
 	{
-		if (prime->envp_paths)
-			ft_free_split((char **)prime->envp_paths);
+		if (prime->paths)
+			ft_free_split((char **)prime->paths);
 		if (prime->cmds)
 		{
 			while (--prime->cmds_size >= 0)
@@ -66,10 +42,10 @@ void	free_prime(t_prime *prime)
 }
 
 void	pipex_exit(
-	t_prime *prime, t_error error, const char *program, const char *file)
+	t_prime *prime, const char *program, const char *file, char *err_str)
 {
-	if (error != NONE)
-		pipex_perror(error, program, file);
+	if (err_str)
+		pipex_perror(program, file, err_str);
 	free_prime(prime);
 	exit(EXIT_SUCCESS);
 }

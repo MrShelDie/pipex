@@ -8,6 +8,7 @@ _SRC_BONUS_ =					\
 
 _FT_TOOLS_ =					\
 	ft_free_split.c				\
+	ft_putchar_fd.c				\
 	ft_putstr_fd.c				\
 	ft_split.c					\
 	ft_strdup.c					\

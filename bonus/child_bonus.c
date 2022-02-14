@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 23:30:58 by nick              #+#    #+#             */
-/*   Updated: 2022/02/14 21:07:34 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 02:54:07 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,17 @@
 pid_t	first_child(int pipefd[2], t_prime *prime)
 {
 	pid_t	pid;
+	char	*err_str;
 
 	if (pipe(pipefd) == -1)
-		pipex_exit(prime, PIPE, prime->argv[0], NULL);
+		pipex_exit(prime, prime->argv[0], NULL, strerror(errno));
 	pid = fork();
 	if (pid == -1)
 	{
+		err_str = strerror(errno);
 		close(pipefd[READ_END]);
 		close(pipefd[WRITE_END]);
-		pipex_exit(prime, FORK, prime->argv[0], NULL);
+		pipex_exit(prime, prime->argv[0], NULL, err_str);
 	}
 	if (pid == 0)
 	{
@@ -43,16 +45,18 @@ pid_t	middle_child(
 
 	if (pipe(pipefd) == -1)
 	{
+		prime->err_str = strerror(errno);
 		close(readfd);
-		pipex_exit(prime, PIPE, prime->argv[0], NULL);
+		pipex_exit(prime, prime->argv[0], NULL, prime->err_str);
 	}
 	pid = fork();
 	if (pid == -1)
 	{
+		prime->err_str = strerror(errno);
 		close(readfd);
 		close(pipefd[READ_END]);
 		close(pipefd[WRITE_END]);
-		pipex_exit(prime, FORK, prime->argv[0], NULL);
+		pipex_exit(prime, prime->argv[0], NULL, prime->err_str);
 	}
 	if (pid == 0)
 	{
@@ -67,12 +71,14 @@ pid_t	middle_child(
 pid_t	last_child(int readfd, t_prime *prime)
 {
 	pid_t	pid;
+	char	*err_str;
 
 	pid = fork();
 	if (pid == -1)
 	{
+		err_str = strerror(errno);
 		close(readfd);
-		pipex_exit(prime, FORK, prime->argv[0], NULL);
+		pipex_exit(prime, prime->argv[0], NULL, err_str);
 	}
 	if (pid == 0)
 		last_child_exec(prime, readfd);

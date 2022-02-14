@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 16:42:22 by nick              #+#    #+#             */
-/*   Updated: 2022/02/14 21:08:35 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 02:55:03 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <errno.h>
+# include <string.h>
 
 # define FALSE 0
 # define TRUE 1
@@ -28,33 +30,18 @@
 typedef struct s_prime
 {
 	char *const	*argv;
-	char *const	*envp_paths;
+	char *const	*paths;
 	char *const	*envp;
 	char *const	**cmds;
+	char		*err_str;
 	int			cmds_size;
 	int			here_doc;
 	int			argc;
 }	t_prime;
 
-/* Error handling codes */
-typedef enum e_error
-{
-	ARGS,
-	MALLOC,
-	PIPE,
-	FORK,
-	CMD_NOT_FOUND,
-	FILE_NOT_FOUND,
-	FILE_PERM,
-	FILE_OPEN,
-	DUP,
-	EXECVE,
-	NONE
-}	t_error;
-
 /*	Displays an error message, clears data and ends the process */
-void	pipex_exit(t_prime *prime, t_error error,
-			const char *program, const char *file);
+void	pipex_exit(t_prime *prime, const char *program,
+			const char *file, char *err_str);
 
 /* Prepares pipe for the first process and forks it.
 *  Returns the pid of the newly created process */
@@ -92,7 +79,7 @@ void	check_cmd(char *cmd_full_path, const char *cmd, t_prime *prime);
 
 /* Iterates through all the paths specified in envp_path, returns
 *  the full path of the cmd or NULL if the file was not found */
-char	*find_cmd_full_path(const char *cmd, char *const *envp_paths);
+char	*find_cmd_path(const char *cmd, char *const *paths);
 
 void	free_prime(t_prime *prime);
 

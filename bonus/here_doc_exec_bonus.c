@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 09:49:35 by nick              #+#    #+#             */
-/*   Updated: 2022/02/14 22:37:12 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 02:16:34 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,5 @@ void	here_doc_exec(t_prime *prime, int writefd)
 	if (line)
 		free(line);
 	close(writefd);
-	pipex_exit(prime, NONE, prime->argv[0], NULL);
+	pipex_exit(prime, prime->argv[0], NULL, NULL);
 }
