@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 09:49:35 by nick              #+#    #+#             */
-/*   Updated: 2022/02/14 22:13:37 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/14 22:37:12 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	here_doc_exec(t_prime *prime, int writefd)
 	char	*limiter;
 
 	limiter = ft_strjoin(prime->argv[2], "\n");
+	if (!limiter)
+		return ;
 	ft_putstr_fd("> ", 1);
 	line = get_next_line(0);
 	while (line
@@ -81,6 +83,7 @@ void	here_doc_exec(t_prime *prime, int writefd)
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 	}
+	free(limiter);
 	if (line)
 		free(line);
 	close(writefd);

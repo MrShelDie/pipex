@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:08:44 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 13:17:59 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/14 22:33:24 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	free_prime(t_prime *prime)
 		{
 			while (--prime->cmds_size >= 0)
 				ft_free_split((char **)prime->cmds[prime->cmds_size]);
+			free(prime->cmds);
 		}
 	}
 }
