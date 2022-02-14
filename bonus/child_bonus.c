@@ -6,13 +6,13 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 23:30:58 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 12:41:00 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/14 21:07:34 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	first_child(int pipefd[2], t_prime *prime)
+pid_t	first_child(int pipefd[2], t_prime *prime)
 {
 	pid_t	pid;
 
@@ -33,9 +33,10 @@ void	first_child(int pipefd[2], t_prime *prime)
 		first_child_exec(prime, pipefd[WRITE_END]);
 	}
 	close(pipefd[WRITE_END]);
+	return (pid);
 }
 
-void	middle_child(
+pid_t	middle_child(
 	char *const *cmd, int pipefd[2], int readfd, t_prime *prime)
 {
 	pid_t	pid;
@@ -60,6 +61,7 @@ void	middle_child(
 	}
 	close(readfd);
 	close(pipefd[WRITE_END]);
+	return (pid);
 }
 
 pid_t	last_child(int readfd, t_prime *prime)

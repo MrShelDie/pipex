@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:04:34 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 13:16:01 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/14 22:05:41 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,27 +63,25 @@ static void	fill_prime(int argc, char *const *argv, t_prime *prime)
 
 static int	pipex(t_prime *prime)
 {
-	int		last_proc_status;
+	pid_t	pid;
 	int		status;
 	int		pipefd[2];
 	int		readfd;
 	int		i;
 
 	first_child(pipefd, prime);
-	i = 1;
+	i = 0;
 	if (prime->here_doc)
-		i = 0;
-	while (i++ < prime->cmds_size - 1)
+		i = -1;
+	while (++i < prime->cmds_size - 1)
 	{
 		readfd = pipefd[READ_END];
+		wait(&status);
 		middle_child(prime->cmds[i], pipefd, readfd, prime);
 	}
-	readfd = pipefd[READ_END];
-	waitpid(last_child(readfd, prime), &last_proc_status, 0);
-	i = 0;
-	while (++i < prime->cmds_size)
-		wait(&status);
-	return (last_proc_status);
+	pid = last_child(pipefd[READ_END], prime);
+	waitpid(pid, &status, 0);
+	return (status);
 }
 
 int	main(int argc, char **argv, char **envp)

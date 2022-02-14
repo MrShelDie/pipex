@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 09:49:35 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 14:53:24 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/14 22:13:37 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,14 @@ static void	write_var(
 	len = *i - start;
 	while (*envp)
 	{
-		if (!ft_strncmp(*envp, line, len))
+		if (!ft_strncmp(*envp, line + start, len))
 		{
 			envp_value = *envp;
 			while (*envp_value && *envp_value != '=')
 				envp_value++;
 			envp_value++;
 			write(writefd, envp_value, ft_strlen(envp_value));
+			break ;
 		}
 		envp++;
 	}
@@ -51,14 +52,15 @@ static void	write_here_doc_line(
 	if (!line[0])
 		return ;
 	start = 0;
-	i = 1;
+	i = 0;
 	while (line[i])
 	{
-		while (line[i] && (line[i] != '$' || line[i - 1] == '\\'))
+		while (line[i] && (line[i] != '$' || (i > 0 && line[i - 1] == '\\')))
 			i++;
-		write(writefd, line + start, i);
-		if (line[i])
-			write_var(line, envp, writefd, &i);
+		write(writefd, line + start, i - start);
+		if (!line[i])
+			break ;
+		write_var(line, envp, writefd, &i);
 		start = i;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 16:42:22 by nick              #+#    #+#             */
-/*   Updated: 2022/02/10 13:14:02 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/14 21:08:35 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,17 @@ typedef enum e_error
 void	pipex_exit(t_prime *prime, t_error error,
 			const char *program, const char *file);
 
-/* Prepares pipe for the first process and forks it */
-void	first_child(int pipefd[2], t_prime *prime);
+/* Prepares pipe for the first process and forks it.
+*  Returns the pid of the newly created process */
+pid_t	first_child(int pipefd[2], t_prime *prime);
 
-/* Prepares pipes for the middle process and forks it */
-void	middle_child(char *const *cmd, int pipefd[2],
+/* Prepares pipes for the middle process and forks it.
+*  Returns the pid of the newly created process */
+pid_t	middle_child(char *const *cmd, int pipefd[2],
 			int readfd, t_prime *prime);
 
-/* Prepares pipes for the last process and forks it. Returns the pid
-*  of the process so that the calling function can call waitpid*/
+/* Prepares pipes for the last process and forks it.
+*  Returns the pid of the newly created process */
 pid_t	last_child(int readfd, t_prime *prime);
 
 /* If there is here_doc, then this process is executed
