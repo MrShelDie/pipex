@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   child_exec_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: gannemar <gannemar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 23:38:41 by nick              #+#    #+#             */
-/*   Updated: 2022/02/15 02:52:36 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 17:01:04 by gannemar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	first_child_exec(t_prime *prime, int writefd)
 	execve(cmd_full_path, prime->cmds[0], prime->envp);
 	prime->err_str = strerror(errno);
 	free(cmd_full_path);
-	pipex_exit(prime, prime->argv[0], prime->argv[1], prime->err_str);
+	pipex_exit(prime, prime->argv[0], prime->cmds[0][0], prime->err_str);
 }
 
 void	middle_child_exec(
@@ -78,5 +78,5 @@ void	last_child_exec(t_prime *prime, int readfd)
 	execve(cmd_path, prime->cmds[prime->cmds_size - 1], prime->envp);
 	prime->err_str = strerror(errno);
 	free(cmd_path);
-	pipex_exit(prime, argv[0], argv[argc - 1], prime->err_str);
+	pipex_exit(prime, argv[0], argv[argc - 2], prime->err_str);
 }
