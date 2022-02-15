@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: gannemar <gannemar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 23:46:14 by nick              #+#    #+#             */
-/*   Updated: 2022/02/08 23:47:21 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 20:09:47 by gannemar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 # ifndef OPEN_MAX
 #  define OPEN_MAX 1024
-#endif
+# endif
 
 typedef struct s_buff
 {

@@ -6,7 +6,7 @@
 /*   By: gannemar <gannemar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 23:38:41 by nick              #+#    #+#             */
-/*   Updated: 2022/02/15 17:01:04 by gannemar         ###   ########.fr       */
+/*   Updated: 2022/02/15 20:09:18 by gannemar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,17 @@ void	middle_child_exec(
 	pipex_exit(prime, prime->argv[0], cmd[0], prime->err_str);
 }
 
+static int	open_outfile(const char *file, int here_doc)
+{
+	int	result;
+
+	if (here_doc)
+		result = open(file, O_WRONLY | O_CREAT | O_APPEND, 0666);
+	else
+		result = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	return (result);
+}
+
 void	last_child_exec(t_prime *prime, int readfd)
 {
 	int			argc;
@@ -60,10 +71,7 @@ void	last_child_exec(t_prime *prime, int readfd)
 
 	argv = prime->argv;
 	argc = prime->argc;
-	if (prime->here_doc)
-		writefd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
-	else
-		writefd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	writefd = open_outfile(argv[argc - 1], prime->here_doc);
 	if (writefd == -1)
 	{
 		prime->err_str = strerror(errno);
