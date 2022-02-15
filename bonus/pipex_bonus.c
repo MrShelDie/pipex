@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: gannemar <gannemar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:04:34 by nick              #+#    #+#             */
-/*   Updated: 2022/02/15 02:55:05 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 16:07:04 by gannemar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	main(int argc, char **argv, char **envp)
 	init_prime(argc, argv, envp, &prime);
 	fill_prime(argc, argv, &prime);
 	status = pipex(&prime);
+	status >>= 8;
 	free_prime(&prime);
 	exit(status);
 }

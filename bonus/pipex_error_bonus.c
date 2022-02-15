@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_error_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: gannemar <gannemar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:08:44 by nick              #+#    #+#             */
-/*   Updated: 2022/02/15 02:55:06 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/15 15:52:33 by gannemar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,13 @@ void	pipex_exit(
 	if (err_str)
 		pipex_perror(program, file, err_str);
 	free_prime(prime);
+	if (err_str)
+	{
+		if (!ft_strncmp(err_str, strerror(EACCES), ft_strlen(err_str)))
+			exit(126);
+		if (!ft_strncmp(err_str, "command not found", ft_strlen(err_str)))
+			exit(127);
+		exit(EXIT_FAILURE);
+	}
 	exit(EXIT_SUCCESS);
 }
