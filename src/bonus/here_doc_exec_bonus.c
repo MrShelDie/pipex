@@ -6,7 +6,7 @@
 /*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 09:49:35 by nick              #+#    #+#             */
-/*   Updated: 2022/02/15 02:16:34 by nick             ###   ########.fr       */
+/*   Updated: 2022/02/16 17:09:55 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void	write_var(
 	start = *i;
 	while (line[*i] && line[*i] != ' ' && line[*i] != '\t' && line[*i] != '\n'
 		&& line[*i] != '\v' && line[*i] != '\f' && line[*i] != '\r'
+		&& line[*i] != '$'
 	)
 		(*i)++;
 	len = *i - start;

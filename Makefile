@@ -24,18 +24,19 @@ _FT_TOOLS_ =					\
 	ft_strlen.c					\
 	ft_strncmp.c				\
 	ft_substr.c					\
+
+_GET_NEXT_LINE_ =				\
 	get_next_line_utils.c		\
 	get_next_line.c
-
-MAND_FLAG		= .mand_flag
-BONUS_FLAG		= .bonus_flag
 
 SRC				= $(addprefix src/mandatory/, $(_SRC_))
 SRC_B 			= $(addprefix src/bonus/, $(_SRC_B_))
 FT_TOOLS		= $(addprefix src/ft_tools/, $(_FT_TOOLS_))
+GET_NEXT_LINE	= $(addprefix src/ft_tools/, $(_GET_NEXT_LINE_))
 
 SRC				+= $(FT_TOOLS)
 SRC_B			+= $(FT_TOOLS)
+SRC_B			+= $(GET_NEXT_LINE)
 
 OBJ				= $(SRC:.c=.o)
 OBJ_B			= $(SRC_B:.c=.o)
@@ -47,7 +48,7 @@ NAME			= pipex
 INCDIR			= include
 
 CC				= gcc
-CFLAGS			= -Wall -Werror -Wextra
+CFLAGS			= -Wall -Werror -Wextra -g
 CPPFLAGS		= -MMD -I./$(INCDIR)
 
 all:		$(NAME)

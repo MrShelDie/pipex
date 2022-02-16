@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gannemar <gannemar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nick <nick@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 17:04:34 by nick              #+#    #+#             */
-/*   Updated: 2022/02/15 19:56:47 by gannemar         ###   ########.fr       */
+/*   Updated: 2022/02/16 16:50:37 by nick             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	pipex(t_prime *prime)
 	pid = last_child(pipefd[READ_END], prime);
 	waitpid(pid, &status, 0);
 	i = -1;
-	while (++i < prime->cmds_size - 1)
+	while (++i < prime->cmds_size + prime->here_doc - 1)
 		wait(NULL);
 	return (status);
 }
