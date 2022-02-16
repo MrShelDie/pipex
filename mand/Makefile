@@ -15,7 +15,9 @@ _FT_TOOLS_ =					\
 	ft_strlcpy.c				\
 	ft_strlen.c					\
 	ft_strncmp.c				\
-	ft_substr.c
+	ft_substr.c					\
+	get_next_line_utils.c		\
+	get_next_line.c
 
 FT_TOOLS		= $(addprefix ../ft_tools/, $(_FT_TOOLS_))
 
