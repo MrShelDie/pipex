@@ -1,10 +1,10 @@
-_SRC_MAND_ =					\
+_SRC_ =							\
 	child_exec.c				\
 	child.c						\
 	pipex_error.c				\
 	pipex.c
 
-_SRC_BONUS_ =					\
+_SRC_B_ =						\
 	child_bonus.c				\
 	child_exec_bonus.c			\
 	child_exec_utils_bonus.c	\
@@ -27,36 +27,39 @@ _FT_TOOLS_ =					\
 	get_next_line_utils.c		\
 	get_next_line.c
 
-SRC_MAND		= $(addprefix mand/, $(_SRC_MAND_))
-SRC_BONUS 		= $(addprefix bonus/, $(_SRC_BONUS_))
-FT_TOOLS		= $(addprefix ft_tools/, $(_FT_TOOLS_))
+MAND_FLAG		= .mand_flag
+BONUS_FLAG		= .bonus_flag
 
-SRC_MAND		+= $(FT_TOOLS)
-SRC_BONUS		+= $(FT_TOOLS)
+SRC				= $(addprefix src/mandatory/, $(_SRC_))
+SRC_B 			= $(addprefix src/bonus/, $(_SRC_B_))
+FT_TOOLS		= $(addprefix src/ft_tools/, $(_FT_TOOLS_))
 
-OBJ_MAND		= $(SRC_MAND:.c=.o)
-OBJ_BONUS		= $(SRC_BONUS:.c=.o)
+SRC				+= $(FT_TOOLS)
+SRC_B			+= $(FT_TOOLS)
 
-DEP_MAND		= $(OBJ_MAND:.o=.d)
-DEP_BONUS		= $(OBJ_BONUS:.o=.d)
+OBJ				= $(SRC:.c=.o)
+OBJ_B			= $(SRC_B:.c=.o)
+
+DEP				= $(OBJ:.o=.d)
+DEP_B			= $(OBJ_B:.o=.d)
 
 NAME			= pipex
 INCDIR			= include
 
 CC				= gcc
-CFLAGS			= -Wall -Werror -Wextra -g		# TODO delte -g
+CFLAGS			= -Wall -Werror -Wextra
 CPPFLAGS		= -MMD -I./$(INCDIR)
 
 all:		$(NAME)
 
-$(NAME):	$(OBJ_MAND)
+bonus:
+	@make --no-print-directory OBJ="$(OBJ_B)" all
+
+$(NAME):	$(OBJ)
 	$(CC) $(CFLAGS) $^ -o $@
 
-bonus:		$(OBJ_BONUS)
-	$(CC) $(CFLAGS) $^ -o $(NAME)
-
 clean:
-	$(RM) $(OBJ_MAND) $(OBJ_BONUS) $(DEP_MAND) $(DEP_BONUS)
+	$(RM) $(OBJ) $(OBJ_B) $(DEP) $(DEP_B)
 
 fclean:		clean
 	$(RM) $(NAME)
@@ -65,4 +68,5 @@ re:			fclean all
 
 .PHONY:		all clean fclean re
 
--include $(DEP_BONUS)
+-include $(DEP)
+-include $(DEP_B)
